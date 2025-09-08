@@ -1,0 +1,4 @@
+dependencies:
+  node: 22.19.0
+  pnpm: 10.15.1
+  deno: 2.4.5

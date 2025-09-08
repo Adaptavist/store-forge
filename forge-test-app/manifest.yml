@@ -1,0 +1,17 @@
+modules:
+  function:
+    - key: test-store-forge-kv-fn
+      handler: test-store-forge-kv.testRunner
+  webtrigger:
+    - key: test-store-forge-kv-trigger
+      function: test-store-forge-kv-fn
+      description: Manually trigger schema migration
+      response:
+        type: dynamic
+permissions:
+  scopes:
+    - "storage:app"
+app:
+  runtime:
+    name: nodejs22.x
+  id: ari:cloud:ecosystem::app/22b5de90-4476-4374-88b9-fabb8669e249

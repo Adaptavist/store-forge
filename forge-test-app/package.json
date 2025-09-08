@@ -1,0 +1,19 @@
+{
+  "name": "@adaptavist/store-forge-test-app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {},
+  "engines": {
+    "node": ">=22.0.0 <23.0.0"
+  },
+  "devDependencies": {
+    "@forge/cli": "^12.4.0",
+    "cloudflared": "^0.7.1"
+  },
+  "dependencies": {
+    "@adaptavist/store-forge-kv": "../store-forge-kv/.npm",
+    "@deno/shim-deno-test": "^0.5.0",
+    "@forge/kvs": "^1.0.5",
+    "@jollytoad/store-common": "jsr:^0.5.0"
+  }
+}
