@@ -8,6 +8,19 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.0.2]
+
+### Fixed
+
+- [store-forge-kv] leave number segments that don't round-trip exactly as
+  strings, eg. stop zero-padded number from being converted to numbers
+- [store-forge-kv] fix encoding of blank space segments
+- run all unit tests (which were mistakenly filtered out before)
+
+### Changed
+
+- update store deps to 0.7.0
+
 ## [0.0.1]
 
 ### Added

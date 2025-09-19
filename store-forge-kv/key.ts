@@ -7,7 +7,7 @@ import { decodeBase64Url, encodeBase64Url } from "@std/encoding/base64url";
  *
  * but we will reserve : as a segment separator and # to indicate a segment was encoded
  */
-const SEGMENT_REGEX = /^[a-zA-Z0-9._\- ]+$/;
+const SEGMENT_REGEX = /^[a-zA-Z0-9._\-][a-zA-Z0-9._\- ]*$/;
 const ENCODED_PREFIX = "#";
 const SEPARATOR = ":";
 
@@ -52,9 +52,9 @@ function encodeSegment(val: string | number | boolean): string {
 function decodeSegment(val: string): string | number | boolean {
   if (val === "true") return true;
   if (val === "false") return false;
-  if (/^\d+$/.test(val)) {
+  if (/^(-)?([1-9][0-9]*|0)$/.test(val)) {
     const n = Number.parseInt(val);
-    if (Number.isSafeInteger(n)) return n;
+    if (Number.isSafeInteger(n) && String(n) === val) return n;
   }
   if (val.startsWith(ENCODED_PREFIX)) {
     return new TextDecoder().decode(decodeBase64Url(val.slice(1)));

@@ -3,7 +3,7 @@
   "specifiers": {
     "jsr:@david/code-block-writer@^13.0.3": "13.0.3",
     "jsr:@deno/dnt@~0.42.3": "0.42.3",
-    "jsr:@jollytoad/store-common@0.6": "0.6.0",
+    "jsr:@jollytoad/store-common@0.7": "0.7.0",
     "jsr:@std/assert@^1.0.14": "1.0.14",
     "jsr:@std/encoding@^1.0.10": "1.0.10",
     "jsr:@std/fmt@1": "1.0.8",
@@ -32,8 +32,8 @@
         "jsr:@ts-morph/bootstrap"
       ]
     },
-    "@jollytoad/store-common@0.6.0": {
-      "integrity": "eb349d5a76e8bf364b7a4cfa56d03bb807b037420bbc5bbef98b667d9c2a7c1b",
+    "@jollytoad/store-common@0.7.0": {
+      "integrity": "491258cecca7e9c44ee8feac5e7ecbc1421ddb945b61791e9688725c7aa26f52",
       "dependencies": [
         "jsr:@std/assert"
       ]
@@ -146,7 +146,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@deno/dnt@~0.42.3",
-      "jsr:@jollytoad/store-common@0.6",
+      "jsr:@jollytoad/store-common@0.7",
       "jsr:@std/assert@^1.0.14",
       "jsr:@std/encoding@^1.0.10",
       "jsr:@std/fs@^1.0.19",

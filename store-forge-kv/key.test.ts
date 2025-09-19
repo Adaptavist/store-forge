@@ -49,6 +49,20 @@ Deno.test("encodeForgeKey() encodes blank spaces", () => {
   );
 });
 
+Deno.test("encodeForgeKey() encodes numbers", () => {
+  assertEquals(
+    encodeForgeKey([0, 1, -2]),
+    "0:1:-2",
+  );
+});
+
+Deno.test("encodeForgeKey() encodes booleans", () => {
+  assertEquals(
+    encodeForgeKey([false, true]),
+    "false:true",
+  );
+});
+
 Deno.test("decodeForgeKey() decodes plain segments", () => {
   assertEquals(
     decodeForgeKey("one:two:three"),
@@ -60,5 +74,33 @@ Deno.test("decodeForgeKey() decodes encoded segments", () => {
   assertEquals(
     decodeForgeKey("two:#OnR3bzo:#I3R3byM:#dHdvIPCfjbs:#ICAg"),
     ["two", ":two:", "#two#", "two 🍻", "   "],
+  );
+});
+
+Deno.test("decodeForgeKey() decodes number segments", () => {
+  assertEquals(
+    decodeForgeKey("0:1:-2"),
+    [0, 1, -2],
+  );
+});
+
+Deno.test("decodeForgeKey() decodes boolean segments", () => {
+  assertEquals(
+    decodeForgeKey("false:true"),
+    [false, true],
+  );
+});
+
+Deno.test("decodeForgeKey() decodes zero-padded number segments as strings", () => {
+  assertEquals(
+    decodeForgeKey("000:001:-002"),
+    ["000", "001", "-002"],
+  );
+});
+
+Deno.test("decodeForgeKey() decodes zero-padded number segments as strings", () => {
+  assertEquals(
+    decodeForgeKey("one:-002:three"),
+    ["one", "-002", "three"],
   );
 });

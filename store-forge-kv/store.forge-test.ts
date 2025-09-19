@@ -4,7 +4,7 @@ import {
   testCopyItems,
   testGetItem,
   testHasItem,
-  testIsWriteable,
+  testIsWritable,
   testListItems,
   testMoveItems,
   testRemoveItem,
@@ -17,7 +17,7 @@ Deno.test("store-forge-kv", async (t) => {
     await open(t, store);
     // The url isn't available when running in forge!
     // await testUrl(t, store, "store-forge-kv");
-    await testIsWriteable(t, store);
+    await testIsWritable(t, store);
     await testSetItem(t, store);
     await testHasItem(t, store);
     await testGetItem(t, store);
