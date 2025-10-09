@@ -9,7 +9,7 @@ import {
   testMoveItems,
   testRemoveItem,
   testSetItem,
-} from "@jollytoad/store-common/test-storage-module";
+} from "@storage/common/test-storage-module";
 import * as store from "./mod.ts";
 
 Deno.test("store-forge-kv", async (t) => {

@@ -19,9 +19,9 @@
   ],
   "imports": {
     "@deno/dnt": "jsr:@deno/dnt@^0.42.3",
-    "@forge/kvs": "npm:@forge/kvs@^1.0.5",
-    "@jollytoad/store-common": "jsr:@jollytoad/store-common@^0.7.0",
-    "@std/assert": "jsr:@std/assert@^1.0.14",
+    "@forge/kvs": "npm:@forge/kvs@^1.0.7",
+    "@storage/common": "jsr:@storage/common@^0.8.0",
+    "@std/assert": "jsr:@std/assert@^1.0.15",
     "@std/encoding": "jsr:@std/encoding@^1.0.10",
     "@std/fs": "jsr:@std/fs@^1.0.19",
     "@std/path": "jsr:@std/path@^1.1.2"

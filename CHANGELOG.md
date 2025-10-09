@@ -8,6 +8,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.0.3]
+
+### Changed
+
+- update to `@storage/common` 0.8.0
+- update other deps
+
 ## [0.0.2]
 
 ### Fixed

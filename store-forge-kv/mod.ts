@@ -1,4 +1,4 @@
-import type { StorageKey, StorageModule } from "@jollytoad/store-common/types";
+import type { StorageKey, StorageModule } from "@storage/common/types";
 import { kvs, WhereConditions } from "@forge/kvs";
 import { decodeForgeKey, encodeForgeKey } from "./key.ts";
 

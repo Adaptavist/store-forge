@@ -1,4 +1,4 @@
-import type { StorageKey } from "@jollytoad/store-common/types";
+import type { StorageKey } from "@storage/common/types";
 import { decodeBase64Url, encodeBase64Url } from "@std/encoding/base64url";
 
 /**
