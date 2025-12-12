@@ -80,7 +80,7 @@ export async function* listItems<T>(
       query = query.cursor(nextCursor);
     }
 
-    const listResult = await query.getMany<T>();
+    const listResult = await query.limit(100).getMany<T>();
 
     nextCursor = listResult.nextCursor;
     more = !!nextCursor;
@@ -112,7 +112,7 @@ export async function clearItems(prefix: StorageKey): Promise<void> {
       query = query.cursor(nextCursor);
     }
 
-    const listResult = await query.getMany();
+    const listResult = await query.limit(100).getMany();
 
     nextCursor = listResult.nextCursor;
     more = !!nextCursor;
