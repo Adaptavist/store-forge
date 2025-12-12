@@ -1,6 +1,11 @@
-import type { StorageKey, StorageModule } from "@storage/common/types";
+import type {
+  ListItemsOptions,
+  StorageKey,
+  StorageModule,
+} from "@storage/common/types";
 import { kvs, WhereConditions } from "@forge/kvs";
 import { decodeForgeKey, encodeForgeKey } from "./key.ts";
+import { config } from "./config.ts";
 
 export type { StorageKey, StorageModule };
 
@@ -67,20 +72,21 @@ export async function removeItem(key: StorageKey): Promise<void> {
  */
 export async function* listItems<T>(
   prefix: StorageKey = [],
-  _reverse = false,
+  options?: ListItemsOptions,
 ): AsyncIterable<[StorageKey, T]> {
   let more = true;
   let nextCursor: string | undefined = undefined;
 
   while (more) {
     let query = kvs.query()
+      .limit(options?.pageSize ?? config.defaultListItemsPageSize)
       .where("key", WhereConditions.beginsWith(encodeForgeKey(prefix, true)));
 
     if (nextCursor) {
       query = query.cursor(nextCursor);
     }
 
-    const listResult = await query.limit(100).getMany<T>();
+    const listResult = await query.getMany<T>();
 
     nextCursor = listResult.nextCursor;
     more = !!nextCursor;
@@ -106,13 +112,14 @@ export async function clearItems(prefix: StorageKey): Promise<void> {
 
   while (more) {
     let query = kvs.query()
+      .limit(config.defaultClearItemsPageSize)
       .where("key", WhereConditions.beginsWith(encodeForgeKey(prefix, true)));
 
     if (nextCursor) {
       query = query.cursor(nextCursor);
     }
 
-    const listResult = await query.limit(100).getMany();
+    const listResult = await query.getMany();
 
     nextCursor = listResult.nextCursor;
     more = !!nextCursor;

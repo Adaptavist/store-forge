@@ -8,6 +8,25 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.0.5]
+
+### Changed
+
+- update to `@storage/common` 0.9.0
+- **BREAKING:** migrated `listItems` to accept options, and use `pageSize` in KV
+  query
+- update other deps
+
+### Added
+
+- `./config` module to expose and allow change of default page sizes
+
+## [0.0.4]
+
+### Changed
+
+- set page size to 100 for all Forge KV queries
+
 ## [0.0.3]
 
 ### Changed

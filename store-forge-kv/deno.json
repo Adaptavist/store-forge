@@ -1,8 +1,9 @@
 {
   "name": "@adaptavist/store-forge-kv",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "exports": {
     ".": "./mod.ts",
-    "./key": "./key.ts"
+    "./key": "./key.ts",
+    "./config": "./config.ts"
   }
 }
