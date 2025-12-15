@@ -31,7 +31,7 @@ jobs:
         run: deno lint
 
       - name: Run docs linter
-        run: deno doc --lint storage-forge-kv/*.ts
+        run: deno doc --lint store-forge-kv/*.ts
 
       - name: Run TypeScript checking
         run: deno check
