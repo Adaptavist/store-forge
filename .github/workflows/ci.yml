@@ -28,7 +28,10 @@ jobs:
         run: deno fmt --check
 
       - name: Run linter
-        run: deno task lint
+        run: deno lint
+
+      - name: Run docs linter
+        run: deno doc --lint storage-forge-kv/*.ts
 
       - name: Run TypeScript checking
         run: deno check

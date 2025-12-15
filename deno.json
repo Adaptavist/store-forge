@@ -7,7 +7,7 @@
     "pnpm": "cd forge-test-app && pnpm",
     "test": "deno test",
     "lint": "deno lint && deno doc --lint store-forge-kv/*.ts",
-    "ok": "deno fmt && deno task lint && deno check && deno task test && deno publish --dry-run --allow-dirty",
+    "ok": "deno fmt && deno lint && deno check && deno task test && deno publish --dry-run --allow-dirty",
     "lock": "rm -f deno.lock && deno install --reload && deno check"
   },
   "compilerOptions": {
