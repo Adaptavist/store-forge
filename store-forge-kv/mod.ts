@@ -1,9 +1,10 @@
 import type {
   ListItemsOptions,
+  SetItemOptions,
   StorageKey,
   StorageModule,
 } from "@storage/common/types";
-import { kvs, WhereConditions } from "@forge/kvs";
+import { kvs, type SetOptions, WhereConditions } from "@forge/kvs";
 import { decodeForgeKey, encodeForgeKey } from "./key.ts";
 import { config } from "./config.ts";
 
@@ -52,9 +53,20 @@ export async function getItem<T>(key: StorageKey): Promise<T | undefined> {
 
 /**
  * Set a value for the given key.
+ * Supports the `expireIn` option (rounded up from milliseconds to nearest second).
  */
-export async function setItem<T>(key: StorageKey, value: T): Promise<void> {
-  await kvs.set<T>(encodeForgeKey(key), value);
+export async function setItem<T>(
+  key: StorageKey,
+  value: T,
+  options?: SetItemOptions,
+): Promise<void> {
+  const forgeOptions = options?.expireIn !== undefined && options.expireIn >= 0
+    ? {
+      ttl: { unit: "SECONDS", value: Math.ceil(options.expireIn / 1000) },
+    } satisfies SetOptions
+    : undefined;
+
+  await kvs.set<T>(encodeForgeKey(key), value, forgeOptions);
 }
 
 /**

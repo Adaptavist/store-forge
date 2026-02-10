@@ -8,6 +8,18 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.0.6]
+
+### Changed
+
+- update to `@storage/common` 0.10.0
+- update to `@forge/kvs` 1.3.0
+- update other deps
+
+### Added
+
+- support for `expireIn` in `setItem` options
+
 ## [0.0.5]
 
 ### Changed

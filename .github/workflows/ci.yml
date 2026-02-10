@@ -30,8 +30,10 @@ jobs:
       - name: Run linter
         run: deno lint
 
-      - name: Run docs linter
-        run: deno doc --lint store-forge-kv/*.ts
+      # This is disabled for now, as the linting produces a false error
+      # See: https://github.com/denoland/deno/issues/27364
+      # - name: Run docs linter
+      #   run: deno doc --lint store-forge-kv/*.ts
 
       - name: Run TypeScript checking
         run: deno check
