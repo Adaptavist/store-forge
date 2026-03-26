@@ -2,10 +2,17 @@ modules:
   function:
     - key: test-store-forge-kv-fn
       handler: test-store-forge-kv.testRunner
+    - key: perf-forge-storage-fn
+      handler: perf-forge-storage.testRunner
   webtrigger:
     - key: test-store-forge-kv-trigger
       function: test-store-forge-kv-fn
-      description: Manually trigger schema migration
+      description: Manually trigger store-forge-kv tests
+      response:
+        type: dynamic
+    - key: perf-forge-storage-trigger
+      function: perf-forge-storage-fn
+      description: Manually trigger forge storage performance tests
       response:
         type: dynamic
 permissions:

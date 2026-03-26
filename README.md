@@ -84,8 +84,8 @@ Once it's installed you need to get a URL to the webtrigger:
 $ deno task forge webtrigger
 ```
 
-Select your installation, and web trigger when prompted, and a URL will be
-returned.
+Select your installation, and the `test-store-forge-kv-trigger` web trigger when
+prompted, and a URL will be returned.
 
 Either open this URL in a browser or `curl` it.
 
@@ -100,6 +100,15 @@ upgrade:
 ```sh
 $ deno task forge-deploy
 ```
+
+### Performance Comparison
+
+After installing the Forge app, you can also run a small performance comparison
+that pits various read/write strategies against each other, and to get an idea
+of how KV performs.
+
+You'll need to hit the `perf-forge-storage-trigger` webtrigger, and then check
+the logs.
 
 ## TODO
 
