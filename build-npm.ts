@@ -3,17 +3,14 @@ import { build, emptyDir } from "@deno/dnt";
 interface DenoConfig {
   name: string;
   version: string;
-  exports: Record<string, string>;
 }
 
 async function buildNpm(dir: string) {
   Deno.chdir(dir);
 
-  const config = JSON.parse(
+  const { name, version } = JSON.parse(
     await Deno.readTextFile(`./deno.json`),
   ) as DenoConfig;
-  const name = config.name as string;
-  const version = config.version as string;
 
   const outDir = `./.npm`;
 
@@ -33,6 +30,8 @@ async function buildNpm(dir: string) {
       version,
     },
     packageManager: "pnpm",
+    declaration: false,
+    scriptModule: false,
   });
 }
 

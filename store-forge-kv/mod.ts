@@ -1,14 +1,24 @@
 import type {
+  BatchedOperation,
+  BatchOptions,
+  GetItemsOptions,
   ListItemsOptions,
   SetItemOptions,
   StorageKey,
   StorageModule,
-} from "@storage/common/types";
-import { kvs, type SetOptions, WhereConditions } from "@forge/kvs";
+  StorageProvider,
+} from "@storage/types";
 import { decodeForgeKey, encodeForgeKey } from "./key.ts";
 import { config } from "./config.ts";
+import { pooledMap } from "@std/async/pool";
+import { chunk } from "@std/collections/chunk";
+import { kvs, WhereConditions } from "@forge/kvs";
+import type { BatchResult, SetOptions } from "@forge/kvs";
 
 export type { StorageKey, StorageModule };
+
+type BatchSetItem = Parameters<typeof kvs.batchSet>[0][number];
+type BatchDeleteItem = Parameters<typeof kvs.batchDelete>[0][number];
 
 ({
   isWritable,
@@ -18,9 +28,23 @@ export type { StorageKey, StorageModule };
   removeItem,
   listItems,
   clearItems,
-  close,
   url,
-}) satisfies StorageModule;
+}) satisfies StorageProvider;
+
+/**
+ * Maximum operations per Forge KV transaction
+ */
+const MAX_OPS_PER_TRANSACT = 25;
+
+/**
+ * Maximum operations per Forge KV batch
+ */
+const MAX_OPS_PER_BATCH = 25;
+
+/**
+ * Default concurrency for Forge KV requests
+ */
+const DEFAULT_CONCURRENCY = 10;
 
 /**
  * Returns the `import.meta.url` of the module.
@@ -52,6 +76,36 @@ export async function getItem<T>(key: StorageKey): Promise<T | undefined> {
 }
 
 /**
+ * Get many values for the given keys, using batched requests.
+ */
+export async function* getItems<T>(
+  keys: Iterable<StorageKey>,
+  options?: GetItemsOptions,
+): AsyncIterable<[StorageKey, T]> {
+  const keyBatches = asBatches(keys, MAX_OPS_PER_BATCH);
+  const resultBatches = pooledMap(
+    options?.concurrency ?? DEFAULT_CONCURRENCY,
+    keyBatches,
+    applyBatchGet<T>,
+  );
+
+  for await (const items of resultBatches) {
+    yield* items;
+  }
+}
+
+async function applyBatchGet<T>(
+  keys: StorageKey[],
+): Promise<[StorageKey, T][]> {
+  const result = await kvs.batchGet<T>(
+    keys.map((key) => ({ key: encodeForgeKey(key) })),
+  );
+  return result.successfulKeys.map((
+    { key, value },
+  ) => [decodeForgeKey(key), value]);
+}
+
+/**
  * Set a value for the given key.
  * Supports the `expireIn` option (rounded up from milliseconds to nearest second).
  */
@@ -60,13 +114,18 @@ export async function setItem<T>(
   value: T,
   options?: SetItemOptions,
 ): Promise<void> {
-  const forgeOptions = options?.expireIn !== undefined && options.expireIn >= 0
+  await kvs.set<T>(encodeForgeKey(key), value, asSetOptions(options));
+}
+
+/**
+ * Map SetItemOptions to Forge SetOptions
+ */
+function asSetOptions(options?: SetItemOptions): SetOptions | undefined {
+  return options?.expireIn !== undefined && options.expireIn >= 0
     ? {
       ttl: { unit: "SECONDS", value: Math.ceil(options.expireIn / 1000) },
-    } satisfies SetOptions
+    }
     : undefined;
-
-  await kvs.set<T>(encodeForgeKey(key), value, forgeOptions);
 }
 
 /**
@@ -144,9 +203,134 @@ export async function clearItems(prefix: StorageKey): Promise<void> {
   await Promise.allSettled(promises);
 }
 
-/**
- * Close all associated resources.
- * This isn't generally required in most situations, it's main use is within test cases.
- */
-export async function close(): Promise<void> {
+export async function* commit(
+  ops: Iterable<BatchedOperation>,
+  batchOptions?: BatchOptions,
+): AsyncIterable<void> {
+  if (batchOptions?.atomic === "preferred") {
+    yield* commitAsTransactions(ops, batchOptions);
+  } else {
+    yield* commitAsBatches(ops, batchOptions);
+  }
+}
+
+async function* commitAsTransactions(
+  ops: Iterable<BatchedOperation>,
+  batchOptions?: BatchOptions,
+): AsyncIterable<void> {
+  const batches = asBatches(ops, MAX_OPS_PER_TRANSACT);
+
+  yield* pooledMap(
+    batchOptions?.concurrency ?? DEFAULT_CONCURRENCY,
+    batches,
+    async (batch) => {
+      let transact = kvs.transact();
+
+      for await (const [opName, key, value, options] of batch) {
+        switch (opName) {
+          case "setItem":
+            transact = transact.set(
+              encodeForgeKey(key),
+              value,
+              undefined,
+              asSetOptions(options),
+            );
+            break;
+          case "removeItem":
+            transact = transact.delete(encodeForgeKey(key));
+            break;
+        }
+      }
+
+      await transact.execute();
+    },
+  );
+}
+
+async function* commitAsBatches(
+  ops: Iterable<BatchedOperation>,
+  batchOptions?: BatchOptions,
+): AsyncIterable<void> {
+  type GroupedOps = {
+    removeItem?: BatchedOperation<"removeItem">[];
+    setItem?: BatchedOperation<"setItem">[];
+  };
+
+  const groupedOps = Object.groupBy(ops, ([opName]) => opName) as GroupedOps;
+
+  const deleteErrors = (await Array.fromAsync(applyBatches(
+    groupedOps.removeItem?.map(asBatchDeleteItem),
+    async (batch) => handleBatchResult(await kvs.batchDelete(batch)),
+    batchOptions,
+  ))).flat();
+
+  const setErrors = (await Array.fromAsync(applyBatches(
+    groupedOps.setItem?.map(asBatchSetItem),
+    async (batch) => handleBatchResult(await kvs.batchSet(batch)),
+    batchOptions,
+  ))).flat();
+
+  if (deleteErrors.length || setErrors.length) {
+    throw new AggregateError([...deleteErrors, ...setErrors]);
+  }
+
+  yield;
+}
+
+async function* applyBatches<T>(
+  items: T[] | undefined,
+  iteratorFn: (batch: T[]) => Promise<Error[]>,
+  options?: BatchOptions,
+): AsyncIterable<Error[]> {
+  if (items?.length) {
+    const batches = chunk(items, MAX_OPS_PER_BATCH);
+
+    yield* pooledMap(
+      options?.concurrency ?? DEFAULT_CONCURRENCY,
+      batches,
+      iteratorFn,
+    );
+  }
+}
+
+function handleBatchResult(result: BatchResult): Error[] {
+  return result.failedKeys?.map((failed) => new Error(failed.error.message)) ??
+    [];
+}
+
+function asBatchSetItem(
+  [_, key, value, options]: BatchedOperation<"setItem">,
+): BatchSetItem {
+  return {
+    key: encodeForgeKey(key),
+    value,
+    options: asSetOptions(options),
+  };
+}
+
+function asBatchDeleteItem(
+  [_, key]: BatchedOperation<"removeItem">,
+): BatchDeleteItem {
+  return {
+    key: encodeForgeKey(key),
+  };
+}
+
+async function* asBatches<T>(
+  items: Iterable<T> | AsyncIterable<T>,
+  batchSize: number,
+): AsyncIterable<T[]> {
+  let batch: T[] = [];
+
+  for await (const item of items) {
+    batch.push(item);
+    if (batch.length >= batchSize) {
+      yield batch;
+      batch = [];
+    }
+  }
+
+  if (batch.length) {
+    yield batch;
+  }
 }

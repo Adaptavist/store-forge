@@ -8,6 +8,18 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.0.7]
+
+### Changed
+
+- update to `@storage/*` 0.11.0-beta.2
+- update to `@forge/kvs` 1.5.0
+- added a web-trigger to measure KV request performance to the Forge test app
+
+### Added
+
+- support for batched operations (and transactions)
+
 ## [0.0.6]
 
 ### Changed

@@ -16,7 +16,7 @@ Minimal Requirements:
 
 Testing in Forge:
 
-- [Node 22](https://nodejs.org/)
+- [Node 24](https://nodejs.org/)
 - [pnpm](https://pnpm.io/)
 
 Or, use
@@ -89,8 +89,7 @@ prompted, and a URL will be returned.
 
 Either open this URL in a browser or `curl` it.
 
-The test suite should run and return either `Success` or `Fail`, you'll have to
-look at the
+The test suite should run and return the test output, you can also look at the
 [Atlassian developer console](https://developer.atlassian.com/console) for any
 log messages if it fails.
 

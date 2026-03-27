@@ -10,24 +10,31 @@ globalThis.Deno ??= Deno;
 export async function testRunner() {
   let pass = true;
 
-  console.log(`Running ${testDefinitions.length} tests...`);
+  const output = [];
 
-  for (const def of testDefinitions) {
-    pass &&= await runTest(def);
+  function log(msg) {
+    output.push(msg);
+    console.log(msg);
   }
 
-  return pass
-    ? {
-      statusCode: 200,
-      body: "Success\n",
-    }
-    : {
-      statusCode: 500,
-      body: "Fail\n",
-    };
+  log(`Running ${testDefinitions.length} tests...`);
+
+  for (const def of testDefinitions) {
+    pass &&= await runTest(def, 0, undefined, log);
+  }
+
+  output.push("");
+  output.push(pass ? "Success" : "Fail");
+  output.push("");
+
+  return {
+    statusCode: pass ? 200 : 500,
+    contentType: "text/plain",
+    body: output.join("\n"),
+  };
 }
 
-async function runTest(def, parent) {
+async function runTest(def, depth, parent, log) {
   let pass = true;
 
   if (!def.ignore) {
@@ -44,18 +51,20 @@ async function runTest(def, parent) {
           ? { name: one.name ?? "step", fn: one }
           : undefined;
         if (def) {
-          pass &&= await runTest(def, context);
+          pass &&= await runTest(def, depth + 1, context, log);
         }
       },
     };
 
-    console.log(parent ? "STEP:" : "TEST:", def.name);
+    const indent = "  ".repeat(depth);
+
+    log(indent + (parent ? "- " : "TEST: ") + def.name);
 
     try {
       await def.fn(context);
     } catch (e) {
       pass = false;
-      console.error("FAIL:", e);
+      log(indent + "ERROR: " + e);
     }
   }
 

@@ -1,8 +1,8 @@
 # Forge KV Storage Module
 
-See [@jollytoad/store](https://jsr.io/@jollytoad/store) for the bigger picture.
+See [@storage/main](https://jsr.io/@storage/main) for the bigger picture.
 
-This package provides an implementation of the storage module interface.
+This package provides an implementation of the `StorageProvider` interface.
 
 Uses the
 [Forge Key-Value Storage](https://developer.atlassian.com/platform/forge/runtime-reference/storage-api-basic/)
