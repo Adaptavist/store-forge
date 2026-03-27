@@ -28,8 +28,8 @@
     "@std/encoding": "jsr:@std/encoding@^1.0.10",
     "@std/fs": "jsr:@std/fs@^1.0.23",
     "@std/path": "jsr:@std/path@^1.1.4",
-    "@storage/test": "jsr:@storage/test@0.11.0-beta.2",
-    "@storage/types": "jsr:@storage/types@0.11.0-beta.2"
+    "@storage/test": "jsr:@storage/test@^0.11.0-beta.3",
+    "@storage/types": "jsr:@storage/types@^0.11.0-beta.3"
   },
   "exclude": [
     "forge-test-app",

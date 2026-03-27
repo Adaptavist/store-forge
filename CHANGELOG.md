@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.0.8]
+
+- update to `@storage/*` 0.11.0-beta.3
+
 ## [0.0.7]
 
 ### Changed

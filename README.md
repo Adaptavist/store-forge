@@ -1,7 +1,7 @@
 # Pluggable Storage Modules for Atlassian Forge
 
 This library provides
-[StorageModule](https://jsr.io/@storage/common/doc/types/~/StorageModule)
+[StoragePrvoider](https://jsr.io/@storage/types/doc/types/~/StorageProvider)
 implementations for Atlassian's
 [Forge](https://developer.atlassian.com/platform/forge/) platform.
 
