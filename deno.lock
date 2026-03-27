@@ -10,14 +10,15 @@
     "jsr:@std/encoding@^1.0.10": "1.0.10",
     "jsr:@std/fmt@1": "1.0.9",
     "jsr:@std/fs@1": "1.0.23",
+    "jsr:@std/fs@^1.0.23": "1.0.23",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@1": "1.1.4",
     "jsr:@std/path@^1.1.4": "1.1.4",
     "jsr:@std/testing@^1.0.17": "1.0.17",
-    "jsr:@storage/fns@~0.11.0-beta.3": "0.11.0-beta.3",
-    "jsr:@storage/test@~0.11.0-beta.3": "0.11.0-beta.3",
-    "jsr:@storage/types@~0.11.0-beta.3": "0.11.0-beta.3",
-    "jsr:@storage/util@~0.11.0-beta.3": "0.11.0-beta.3",
+    "jsr:@storage/fns@0.11": "0.11.0",
+    "jsr:@storage/test@0.11": "0.11.0",
+    "jsr:@storage/types@0.11": "0.11.0",
+    "jsr:@storage/util@0.11": "0.11.0",
     "jsr:@ts-morph/bootstrap@0.27": "0.27.0",
     "jsr:@ts-morph/common@0.27": "0.27.0",
     "npm:@forge/kvs@^1.5.0": "1.5.0",
@@ -32,7 +33,7 @@
       "dependencies": [
         "jsr:@david/code-block-writer",
         "jsr:@std/fmt",
-        "jsr:@std/fs",
+        "jsr:@std/fs@1",
         "jsr:@std/path@1",
         "jsr:@ts-morph/bootstrap"
       ]
@@ -77,16 +78,16 @@
         "jsr:@std/assert@^1.0.17"
       ]
     },
-    "@storage/fns@0.11.0-beta.3": {
-      "integrity": "a8a46f3203c74fa3db2de0aa960a50228e256a1fec9c094072a2104fc3e8d2e0",
+    "@storage/fns@0.11.0": {
+      "integrity": "c9d050b22510c21cba0807acfa83f795c9ba85e73db73b45e6a447b51d40e85e",
       "dependencies": [
         "jsr:@std/async",
         "jsr:@storage/types",
         "jsr:@storage/util"
       ]
     },
-    "@storage/test@0.11.0-beta.3": {
-      "integrity": "b6b569513f9ecd344c6ca5b84527b5725b2848fc4d0867b8b65aaf1f123f029d",
+    "@storage/test@0.11.0": {
+      "integrity": "9f989438017fac18703e6e2e204b3f69eb1dd97cc5054959b9594a1144a64c02",
       "dependencies": [
         "jsr:@std/assert@^1.0.19",
         "jsr:@std/testing",
@@ -94,11 +95,11 @@
         "jsr:@storage/types"
       ]
     },
-    "@storage/types@0.11.0-beta.3": {
-      "integrity": "ad079d6e674fbb0efcd426fa2dbbca66809f8e8c0ec7ee77be842245d22adaf6"
+    "@storage/types@0.11.0": {
+      "integrity": "252c68a69bf3b57caa9543a83084ee78b68bd3bedb2f8a26764ac2de8469373a"
     },
-    "@storage/util@0.11.0-beta.3": {
-      "integrity": "24b8f79e7f15626f4a8e1d5a5e1526937c1c7415fc2a3f83bec86a1ffa6b5cbb",
+    "@storage/util@0.11.0": {
+      "integrity": "6bbf77776ecb8968ce4cecb16de52165a149e609c1be45ea90a003f54191396b",
       "dependencies": [
         "jsr:@std/async",
         "jsr:@storage/types"
@@ -113,7 +114,7 @@
     "@ts-morph/common@0.27.0": {
       "integrity": "c7b73592d78ce8479b356fd4f3d6ec3c460d77753a8680ff196effea7a939052",
       "dependencies": [
-        "jsr:@std/fs",
+        "jsr:@std/fs@1",
         "jsr:@std/path@1"
       ]
     }
@@ -448,8 +449,8 @@
       "jsr:@std/encoding@^1.0.10",
       "jsr:@std/fs@^1.0.23",
       "jsr:@std/path@^1.1.4",
-      "jsr:@storage/test@~0.11.0-beta.3",
-      "jsr:@storage/types@~0.11.0-beta.3",
+      "jsr:@storage/test@0.11",
+      "jsr:@storage/types@0.11",
       "npm:@forge/kvs@^1.5.0"
     ]
   }
