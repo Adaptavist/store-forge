@@ -14,6 +14,8 @@ import { pooledMap } from "@std/async/pool";
 import { chunk } from "@std/collections/chunk";
 import { kvs, WhereConditions } from "@forge/kvs";
 import type { BatchResult, SetOptions } from "@forge/kvs";
+import { asyncFilter } from "@storage/util/async-filter";
+import { uniqueKeyFilter } from "@storage/util/unique-key-filter";
 
 export type { StorageKey, StorageModule };
 
@@ -48,9 +50,11 @@ const DEFAULT_CONCURRENCY = 10;
 
 /**
  * Returns the `import.meta.url` of the module.
+ * NOTE: dnt transforms import.meta.url and breaks the forge build,
+ * so I've removed it from here.
  */
 export function url(): Promise<string> {
-  return Promise.resolve(import.meta.url);
+  return Promise.resolve("jsr:@adaptavist/store-forge-kv");
 }
 
 /**
@@ -82,7 +86,8 @@ export async function* getItems<T>(
   keys: Iterable<StorageKey>,
   options?: GetItemsOptions,
 ): AsyncIterable<[StorageKey, T]> {
-  const keyBatches = asBatches(keys, MAX_OPS_PER_BATCH);
+  const uniqueKeys = asyncFilter(keys, uniqueKeyFilter());
+  const keyBatches = asBatches(uniqueKeys, MAX_OPS_PER_BATCH);
   const resultBatches = pooledMap(
     options?.concurrency ?? DEFAULT_CONCURRENCY,
     keyBatches,

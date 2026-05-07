@@ -1,0 +1,4 @@
+allowBuilds:
+  "@forge/cli": false
+  cloudflared: false
+  keytar: false

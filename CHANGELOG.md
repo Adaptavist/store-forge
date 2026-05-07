@@ -8,6 +8,20 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.2.0]
+
+- update to `@storage/*` 0.12.0
+- update to `@forge/kvs` 1.6.3
+
+### Fixed
+
+- fix `getItems` to deduplicate keys, which caused Forge KV to error
+- `batch` ops are now deduplicated by key, which caused Forge KV to error (this
+  fix came from the `@storage/*` 0.12.0 update)
+- remove use of `import.meta.url`, which gets unnecessarily transformed by 'dnt'
+  and causes problems in Forge app webpack bundles
+- stop 'dnt' from including unnecessary polyfills
+
 ## [0.1.0]
 
 - update to `@storage/*` 0.11.0

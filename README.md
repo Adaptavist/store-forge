@@ -111,7 +111,6 @@ the logs.
 
 ## TODO
 
-- _report failures directly from payload_
 - _task to find the web trigger URL, hit it, and console log the result, with an
   appropriate exit code_
 - _run in CI_

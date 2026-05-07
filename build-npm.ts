@@ -32,6 +32,9 @@ async function buildNpm(dir: string) {
     packageManager: "pnpm",
     declaration: false,
     scriptModule: false,
+    compilerOptions: {
+      target: "Latest",
+    },
   });
 }
 
