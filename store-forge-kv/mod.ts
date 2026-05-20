@@ -299,7 +299,11 @@ async function* applyBatches<T>(
 }
 
 function handleBatchResult(result: BatchResult): Error[] {
-  return result.failedKeys?.map((failed) => new Error(failed.error.message)) ??
+  return result.failedKeys?.flatMap((failed) =>
+    failed.error.code !== "KEY_NOT_FOUND"
+      ? [new Error(failed.error.message, { cause: failed })]
+      : []
+  ) ??
     [];
 }
 

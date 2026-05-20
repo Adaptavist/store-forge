@@ -8,10 +8,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.3.0]
+
+- update to `@forge/kvs` 1.6.3
+- fix batched ops to not throw on a non-existent key for `removeItem`
+- added additional tests to ensure no other non-existent key errors are thrown
+
 ## [0.2.0]
 
 - update to `@storage/*` 0.12.0
-- update to `@forge/kvs` 1.6.3
+- update to `@forge/kvs` 1.6.2
 
 ### Fixed
 
